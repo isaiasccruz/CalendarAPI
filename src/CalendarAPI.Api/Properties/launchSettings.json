@@ -1,0 +1,59 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:17877/",
+      "sslPort": 44348
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ENVIRONMENT": "LOCAL",
+        "DEFAULTDB": "Data Source=sv_dev,1433;User Id={user};Password={password};MultipleActiveResultSets=true;",
+        "DB_DEF_USR": "default_usr",
+        "DB_DEF_PWD": "default_pwd123*"
+      }
+    },
+    "CalendarAPI.Api.LOCAL": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ENVIRONMENT": "LOCAL",
+        "DEFAULTDB": "Data Source=localhost,1433;User Id={user};Password={password};MultipleActiveResultSets=true;",
+        "DB_DEF_USR": "default_usr",
+        "DB_DEF_PWD": "default_pwd123*"
+      }
+    },    
+    "CalendarAPI.Api.DEV": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ENVIRONMENT": "LOCAL",
+        "DEFAULTDB": "Data Source=sv_dev,1433;User Id={user};Password={password};MultipleActiveResultSets=true;",
+        "DB_DEF_USR": "default_usr",
+        "DB_DEF_PWD": "default_pwd123*"
+      }
+    },
+    "CalendarAPI.Api.TST": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ENVIRONMENT": "LOCAL",
+        "DEFAULTDB": "Data Source=sv_tst,1433;User Id={user};Password={password};MultipleActiveResultSets=true;",
+        "DB_DEF_USR": "default_usr",
+        "DB_DEF_PWD": "default_pwd123*"
+      }
+    }
+  }
+}

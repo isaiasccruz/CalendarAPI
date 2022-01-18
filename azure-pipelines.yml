@@ -1,0 +1,80 @@
+trigger:
+  branches:
+    include:
+      - '*'
+    exclude:
+      - 'master'
+      - 'main'
+
+resources:
+  repositories:
+    - repository: templatesconfig
+      type: git
+      name: 'Agile/TI.CICD.Configuration'
+      ref: refs/heads/main
+    - repository: templates
+      type: git
+      name: 'Infra Agile/TI.CICD.Templates'
+      ref: refs/tags/5-stable
+
+parameters:
+  - name: ChangeTitle
+    default: "Develoment Test Of REST API WITH SWAGGER"
+  - name: WindowStart
+    default: "15-12-2021 15:00:00"
+  - name: WindowEnd
+    default: "15-12-2021 16:00:00"
+  - name: Risk
+    default: "Low"
+    values:
+      - Low
+      - Moderate
+      - High      
+  - name: RiskDesc
+    default: "No risks"
+
+variables:
+  - name: Area
+    value: digital
+  - name: Domain
+    value: Insurance
+  - name: Tribe
+    value: racers
+  - name: Squad
+    value: FastAndFurious
+
+  - name: Product
+    value: api
+  - name: AppLanguage
+    value: netcore
+  - name: AppVersion
+    value: 1.0.0
+  - name: ChartName
+    value: netcore31-web
+  - name: ChartVersion
+    value: 2.3
+  - name: Secrets
+    value: sql-default
+  - name: Monitoring
+    value: DataDog
+
+  - template: config.yml@templatesconfig
+  - template: yaml/config/vars.yml@templates
+
+
+stages:
+  - template: yaml/pipelines/pipeline-k8s.yml@templates
+    parameters:
+      FrameworkBuildTeste: netcore
+      TrunkBased: false
+      AzureSQL: false
+      Ambientes:        
+        dev: true
+        tst: true
+        stg: false
+        prd: true
+      PullRequest:
+        BranchFeature:
+          Destino: develop
+        BranchComum:
+          Destino: master

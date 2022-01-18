@@ -1,0 +1,53 @@
+image:
+  runtime: 
+    so: "alpine" # alpine, ubuntu, debian
+
+service:
+  port: 80
+
+# application expose with ingress
+ingress:
+  enabled: true
+  host: aws-dev.fantasyComp.dev
+  path: /CalendarAPI
+  timeout: 60
+
+# health check - liveness and readiness probe
+healthCheck:
+  enabled: true
+  path: /health
+
+  liveness:
+    enabled: false
+    path: /liveness-health 
+
+  # environment variables
+env:
+  enabled: true
+  values:
+    LOG_LEVEL: "Information"  # Verbose, Debug, Information, Warning, Error, Fatal
+    ENVIRONMENT": "DEV"
+    DEFAULTDB": "Data Source=sv_dev,1433;User Id={user};Password={password};MultipleActiveResultSets=true;"
+    DB_DEF_USR": "default_usr"
+    DB_DEF_PWD": "default_pwd123*"
+
+replicaCount: 2
+
+# horizontal pod auto scaling
+hpa:
+  enabled: enable
+  minReplicas: 2 
+  maxReplicas: 3
+  cpu:
+    averageUtilization: 500 
+  memory:
+    averageUtilization: 200
+
+# pod resources
+resources: 
+  requests:
+    cpu: 10m
+    memory: 140Mi
+  limits:
+    cpu: 100m
+    memory: 400Mi    
