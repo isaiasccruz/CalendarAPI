@@ -23,7 +23,6 @@ namespace CalendarAPI.Controllers
         [HttpPost("calendar/availability")]
         [ProducesResponseType(typeof(DefaultResult), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostAsync([FromBody] List<Person> obj)
         {
@@ -42,14 +41,13 @@ namespace CalendarAPI.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new DefaultResult() { DateTimeOfResult = DateTime.Now, ErrorMesage = ex.Message, SuccessMessage = null, Sucess = false, resultBody = null });
+                return StatusCode(StatusCodes.Status500InternalServerError, new DefaultResult() { DateTimeOfResult = DateTime.Now, ErrorMesage = ex.Message, SuccessMessage = null, Sucess = false, resultBody = null });
             }
         }
 
         [HttpGet("calendar/availability")]
         [ProducesResponseType(typeof(DefaultResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAsync([FromQuery] PersonAvailability obj)
         {
@@ -66,7 +64,7 @@ namespace CalendarAPI.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new DefaultResult() { DateTimeOfResult = DateTime.Now, ErrorMesage = ex.Message, SuccessMessage = null, Sucess = false, resultBody = null });
+                return StatusCode(StatusCodes.Status500InternalServerError, new DefaultResult() { DateTimeOfResult = DateTime.Now, ErrorMesage = ex.Message, SuccessMessage = null, Sucess = false, resultBody = null });
             }
         }
     }

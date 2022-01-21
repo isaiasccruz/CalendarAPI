@@ -3,7 +3,7 @@ using CalendarAPI.Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CalendarAPI.Domain.Repositories
+namespace CalendarAPI.Application.Interfaces
 {
     public interface ICalendarRepository
     {

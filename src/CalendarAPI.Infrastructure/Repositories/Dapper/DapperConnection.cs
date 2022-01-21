@@ -1,5 +1,5 @@
 ﻿using CalendarAPI.Domain.Enums;
-using CalendarAPI.Domain.Repositories;
+using CalendarAPI.Infrastructure.Interfaces;
 using Dapper;
 using System;
 using System.Collections.Generic;

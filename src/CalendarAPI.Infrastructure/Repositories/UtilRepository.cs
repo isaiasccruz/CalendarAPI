@@ -1,4 +1,4 @@
-﻿using CalendarAPI.Domain.Repositories;
+﻿using CalendarAPI.Application.Interfaces;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -7,15 +7,15 @@ namespace CalendarAPI.Infrastructure.Repositories
     [ExcludeFromCodeCoverage]
     public class UtilRepository : IUtilRepository
     {
-        public IDictionary<string, string> UpsertDictionary(IDictionary<string, string> dic, string _chave, string val)
+        public IDictionary<string, string> UpsertDictionary(IDictionary<string, string> dic, string _key, string val)
         {
             if (dic == null) dic = new Dictionary<string, string>();
 
-            if (dic.ContainsKey(_chave))
+            if (dic.ContainsKey(_key))
             {
-                dic.Remove(_chave);
+                dic.Remove(_key);
             }
-            dic.Add(_chave, val);
+            dic.Add(_key, val);
             return dic;
         }
     }

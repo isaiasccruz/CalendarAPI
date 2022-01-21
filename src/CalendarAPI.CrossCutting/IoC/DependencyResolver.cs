@@ -1,7 +1,7 @@
 ﻿using CalendarAPI.Application;
 using CalendarAPI.Application.Interfaces;
-using CalendarAPI.Domain.Repositories;
 using CalendarAPI.Infrastructure;
+using CalendarAPI.Infrastructure.Interfaces;
 using CalendarAPI.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;

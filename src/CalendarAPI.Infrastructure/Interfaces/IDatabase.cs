@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CalendarAPI.Domain.Repositories
+namespace CalendarAPI.Infrastructure.Interfaces
 {
     public interface IDatabase
     {

@@ -2,7 +2,6 @@
 using CalendarAPI.Domain.DbModels;
 using CalendarAPI.Domain.Enums;
 using CalendarAPI.Domain.Models;
-using CalendarAPI.Domain.Repositories;
 using Newtonsoft.Json;
 using Serilog;
 using System;
@@ -37,24 +36,26 @@ namespace CalendarAPI.Application
             {
                 foreach (Person person in obj)
                 {
-                    if (!string.IsNullOrEmpty(person.Name) && !string.IsNullOrEmpty(person.Role) && (person.Slots != null && person.Slots.Count > 0))
-                    {
-                        for (int i = 0; i < person.Slots.Count; i++)
-                        {
+                    List<Slot> slots = person.Slots.ToList();
 
-                            if ((person.Slots[i].DateStart >= person.Slots[i].DateEnd))
+                    if (!string.IsNullOrEmpty(person.Name) && !string.IsNullOrEmpty(person.Role) && (slots != null && slots.Count > 0))
+                    {
+                        for (int i = 0; i < slots.Count; i++)
+                        {                            
+
+                            if ((slots[i].DateStart >= slots[i].DateEnd))
                             {
                                 response.ErrorMesage += $"Slot of index: {i}, name: {person.Name} with Invalid DateStart/DateEnd (DateEnd must be at least one hour older than DateStart);";
                                 response.resultBody = _utilRepository.UpsertDictionary(dic, $"Slot index: {i}, name: {person.Name}", "Invalid DateStart/DateEnd");
                                 Log.Error($"Invalid Data on slot of index {i}.");
                             }
-                            else if ((person.Slots[i].DateStart.Minute != 00 && person.Slots[i].DateStart.Second != 00) && (person.Slots[i].DateEnd.Minute != 00 && person.Slots[i].DateEnd.Second != 00))
+                            else if ((slots[i].DateStart.Minute != 00 && slots[i].DateStart.Second != 00) && (slots[i].DateEnd.Minute != 00 && slots[i].DateEnd.Second != 00))
                             {
                                 response.ErrorMesage += $"Slot of index: {i}, name: {person.Name} with Invalid DateStart/DateEnd (An hour slot can't have broken minutes/seconds within an hour. Valid example: 13:00:00 - 14:00:00);";
                                 response.resultBody = _utilRepository.UpsertDictionary(dic, $"Slot index: {i}, name: {person.Name}", "Invalid DateStart/DateEnd");
                                 Log.Error($"Invalid Data on slot of index {i}.");
                             }
-                            else if (person.Slots[i].DateStart.AddHours(1) != person.Slots[i].DateEnd)
+                            else if (slots[i].DateStart.AddHours(1) != slots[i].DateEnd)
                             {
                                 response.ErrorMesage += $"Slot of index: {i}, name: {person.Name} with Invalid DateStart/DateEnd (An interview slot is a 1-hour period of time that spreads from the beginning of any hour until the beginning of the next hour);";
                                 response.resultBody = _utilRepository.UpsertDictionary(dic, $"Slot index: {i}, name: {person.Name}", "Invalid DateStart/DateEnd");
@@ -68,8 +69,8 @@ namespace CalendarAPI.Application
                                     CandidateAvailabilityDbModel candidate = new CandidateAvailabilityDbModel()
                                     {
                                         CandidateName = person.Name,
-                                        DateStart = person.Slots[i].DateStart,
-                                        DateEnd = person.Slots[i].DateEnd,
+                                        DateStart = slots[i].DateStart,
+                                        DateEnd = slots[i].DateEnd,
                                     };
 
                                     try
@@ -92,8 +93,8 @@ namespace CalendarAPI.Application
                                     InterviewerAvailabilityDbModel interviewer = new InterviewerAvailabilityDbModel()
                                     {
                                         InterviewerName = person.Name,
-                                        DateStart = person.Slots[i].DateStart,
-                                        DateEnd = person.Slots[i].DateEnd,
+                                        DateStart = slots[i].DateStart,
+                                        DateEnd = slots[i].DateEnd,
                                     };
 
                                     try
@@ -136,7 +137,10 @@ namespace CalendarAPI.Application
             catch (Exception ex)
             {
                 Log.Error($"Error: {ex.Message}, Inner: {ex.InnerException?.Message}, Stack: {ex.StackTrace}");
-                throw ex;
+                response.Sucess = false;
+                response.SuccessMessage = null;
+                response.ErrorMesage = $"Error: {ex.Message}, Inner: {ex.InnerException?.Message}, Stack: {ex.StackTrace}";
+                response.resultBody = null;
             }
 
             Log.Information($"{DateTime.Now:HH:mm:ss} - Slot Creation Request Processed");
@@ -172,9 +176,10 @@ namespace CalendarAPI.Application
                     }
                     catch (Exception ex)
                     {
-                        response.ErrorMesage += $"Candidate: {candidateSlots.Name} returned error trying to get the slots: {ex.Message};";
-                        response.resultBody = _utilRepository.UpsertDictionary(dic, $"Candidate: {candidateSlots.Name}", $"returned error trying to get the slots: {ex.Message}");
-                        Log.Error($"Candidate: {candidateSlots.Name} returned error trying to get the slots: {ex.Message}");
+                        response.Sucess = false;
+                        response.ErrorMesage += $"Candidate: {obj.CandidateName} returned error trying to get the slots: {ex.Message};";
+                        response.resultBody = _utilRepository.UpsertDictionary(dic, $"Candidate: {obj.CandidateName}", $"returned error trying to get the slots: {ex.Message}");
+                        Log.Error($"Candidate: {obj.CandidateName} returned error trying to get the slots: {ex.Message}");
                     }
 
                     if (candidateSlots != null && candidateSlots.Slots.Any())
@@ -189,7 +194,7 @@ namespace CalendarAPI.Application
                             {
                                 try
                                 {
-                                    var answr = await _calendarRepository.GetAvailabilitySlots(obj.InterviewersQueryParam[i], candidateSlots.Slots);
+                                    var answr = await _calendarRepository.GetAvailabilitySlots(obj.InterviewersQueryParam[i], candidateSlots.Slots.ToList());
 
                                     if (answr != null)
                                     {
@@ -235,7 +240,10 @@ namespace CalendarAPI.Application
             catch (Exception ex)
             {
                 Log.Error($"Error: {ex.Message}, Inner: {ex.InnerException?.Message}, Stack: {ex.StackTrace}");
-                throw ex;
+                response.Sucess = false;
+                response.SuccessMessage = null;
+                response.ErrorMesage = $"Error: {ex.Message}, Inner: {ex.InnerException?.Message}, Stack: {ex.StackTrace}";
+                response.resultBody = null;
             }
 
             Log.Information($"{DateTime.Now:HH:mm:ss} - Slot Retrieval Request Processed");

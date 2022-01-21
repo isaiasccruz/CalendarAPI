@@ -1,7 +1,8 @@
-﻿using CalendarAPI.Domain.DbModels;
+﻿using CalendarAPI.Application.Interfaces;
+using CalendarAPI.Domain.DbModels;
 using CalendarAPI.Domain.Enums;
 using CalendarAPI.Domain.Models;
-using CalendarAPI.Domain.Repositories;
+using CalendarAPI.Infrastructure.Interfaces;
 using CalendarAPI.Infrastructure.Scripts;
 using Serilog;
 using System;

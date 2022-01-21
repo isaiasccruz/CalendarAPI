@@ -11,6 +11,6 @@ namespace CalendarAPI.Domain.Models
         public string Name { get; set; }
 
         [JsonProperty("slots")]
-        public List<Slot> Slots { get; set; }
+        public IList<Slot> Slots { get; set; }
     }
 }
